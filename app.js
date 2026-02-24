@@ -275,36 +275,42 @@ function updateVisualization() {
 // Event Listeners
 tempSlider.addEventListener('input', () => {
     tempVal.textContent = tempSlider.value;
-    droneSelect.value = 'custom';
+    if (droneSelect) droneSelect.value = 'custom';
     updateVisualization();
 });
 precipSlider.addEventListener('input', () => {
     precipVal.textContent = precipSlider.value;
-    droneSelect.value = 'custom';
+    if (droneSelect) droneSelect.value = 'custom';
     updateVisualization();
 });
 windSlider.addEventListener('input', () => {
     windVal.textContent = windSlider.value;
-    droneSelect.value = 'custom';
+    if (droneSelect) droneSelect.value = 'custom';
     updateVisualization();
 });
 
 // Dropdown change listener
-droneSelect.addEventListener('change', () => {
-    const drone = droneSelect.value;
-    if (drone === 'custom') return;
+if (droneSelect) {
+    droneSelect.addEventListener('change', () => {
+        const drone = droneSelect.value;
+        if (drone === 'custom') return;
 
-    const specs = DRONE_SPECS[drone];
-    tempSlider.value = specs.temp;
-    precipSlider.value = specs.precip;
-    windSlider.value = specs.wind;
+        const specs = DRONE_SPECS[drone];
+        tempSlider.value = specs.temp;
+        precipSlider.value = specs.precip;
+        windSlider.value = specs.wind;
 
-    tempVal.textContent = specs.temp;
-    precipVal.textContent = specs.precip;
-    windVal.textContent = specs.wind;
+        tempVal.textContent = specs.temp;
+        precipVal.textContent = specs.precip;
+        windVal.textContent = specs.wind;
 
-    updateVisualization();
-});
+        // Defer the heavy computation so the browser can repaint
+        // the updated slider positions and labels first.
+        requestAnimationFrame(() => {
+            updateVisualization();
+        });
+    });
+}
 
 // Initialization
 initMap();
