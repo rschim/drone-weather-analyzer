@@ -21,6 +21,14 @@ const windSlider = document.getElementById('wind-slider');
 const tempVal = document.getElementById('temp-val');
 const precipVal = document.getElementById('precip-val');
 const windVal = document.getElementById('wind-val');
+const droneSelect = document.getElementById('drone-select');
+
+// Drone Specs
+const DRONE_SPECS = {
+    'X25': { temp: 40, precip: 10, wind: 15 },
+    'V25': { temp: 35, precip: 0.5, wind: 10 },
+    'PW.Orca': { temp: 40, precip: 4, wind: 12.5 }
+};
 
 // Initialize Map
 function initMap() {
@@ -267,14 +275,34 @@ function updateVisualization() {
 // Event Listeners
 tempSlider.addEventListener('input', () => {
     tempVal.textContent = tempSlider.value;
+    droneSelect.value = 'custom';
     updateVisualization();
 });
 precipSlider.addEventListener('input', () => {
     precipVal.textContent = precipSlider.value;
+    droneSelect.value = 'custom';
     updateVisualization();
 });
 windSlider.addEventListener('input', () => {
     windVal.textContent = windSlider.value;
+    droneSelect.value = 'custom';
+    updateVisualization();
+});
+
+// Dropdown change listener
+droneSelect.addEventListener('change', () => {
+    const drone = droneSelect.value;
+    if (drone === 'custom') return;
+
+    const specs = DRONE_SPECS[drone];
+    tempSlider.value = specs.temp;
+    precipSlider.value = specs.precip;
+    windSlider.value = specs.wind;
+
+    tempVal.textContent = specs.temp;
+    precipVal.textContent = specs.precip;
+    windVal.textContent = specs.wind;
+
     updateVisualization();
 });
 
